@@ -45,13 +45,18 @@ object LetMeSpeak {
       print(s"${verb.word} >> ")
       val answer = readLine
 
-      val correctAnswer = s"${verb.v1} ${verb.v2} ${verb.v3}"
-      val isCorrect = answer == correctAnswer
+      val splitAnswer = answer.split(" ")
+
+      val isV1Right = verb.v1.split("/").contains(splitAnswer(0))
+      val isV2Right = verb.v2.split("/").contains(splitAnswer(1))
+      val isV3Right = verb.v3.split("/").contains(splitAnswer(2))
+
+      val isCorrect = isV1Right && isV2Right && isV3Right
 
       if (isCorrect) {
         countRightAnswer += 1
         println(s"Yep, $countRightAnswer correct answers from $countAllAnswers")
-      } else println(s"Nope, correct answer is: $correctAnswer")
+      } else println(s"Nope, correct answer is: ${verb.v1} ${verb.v2} ${verb.v3}")
     })
   }
 }

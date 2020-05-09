@@ -58,5 +58,7 @@ object LetMeSpeak {
         println(s"Yep, $countRightAnswer correct answers from $countAllAnswers")
       } else println(s"Nope, correct answer is: ${verb.v1} ${verb.v2} ${verb.v3}")
     })
+
+    println(s"$countRightAnswer right answers from $countAllAnswers.")
   }
 }

@@ -3,7 +3,7 @@ package io.vaan.letmespeak
 
 import scala.io.Source
 import scala.io.StdIn.readLine
-import scala.util.Random
+import scala.util.{Failure, Random, Success, Try}
 
 object LetMeSpeak {
   private case class Verb(
@@ -45,13 +45,17 @@ object LetMeSpeak {
       print(s"${verb.word} >> ")
       val answer = readLine
 
-      val splitAnswer = answer.split(" ")
+      val isCorrect = Try {
+        val splitAnswer = answer.split(" ")
+        val isV1Right = verb.v1.split("/").contains(splitAnswer(0))
+        val isV2Right = verb.v2.split("/").contains(splitAnswer(1))
+        val isV3Right = verb.v3.split("/").contains(splitAnswer(2))
 
-      val isV1Right = verb.v1.split("/").contains(splitAnswer(0))
-      val isV2Right = verb.v2.split("/").contains(splitAnswer(1))
-      val isV3Right = verb.v3.split("/").contains(splitAnswer(2))
-
-      val isCorrect = isV1Right && isV2Right && isV3Right
+        isV1Right && isV2Right && isV3Right
+      } match {
+        case Failure(_) => false
+        case Success(result) => result
+      }
 
       if (isCorrect) {
         countRightAnswer += 1

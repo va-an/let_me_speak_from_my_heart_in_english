@@ -6,35 +6,16 @@ import scala.io.StdIn.readLine
 import scala.util.Random
 
 object LetMeSpeak {
-
-  def main(args: Array[String]): Unit = {
-    val verbs = fetchVerbs
-    var count = 0
-
-    verbs.foreach(verb => {
-      print(s"${verb.word} >> ")
-      val answer = readLine
-
-      val correctAnswer = s"${verb.v1} ${verb.v2} ${verb.v3}"
-      val isCorrect = answer == correctAnswer
-
-      if (isCorrect) {
-        count += 1
-        println(s"Yep, $count correct answers")
-      } else println(s"Nope, correct asnwer is: ${correctAnswer}")
-    })
-  }
-
-  case class Verb(
+  private case class Verb(
     word: String,
     v1: String,
     v2: String,
     v3: String
   )
 
-  private def fetchVerbs: Seq[Verb] = {
+  private def fetchVerbs(fileForOpen: String): Seq[Verb] = {
     val verbs = Source
-      .fromResource("verbs.dsv")
+      .fromResource(fileForOpen)
       .getLines
       .toSeq
       .map { x =>
@@ -48,5 +29,29 @@ object LetMeSpeak {
       }
 
     Random.shuffle(verbs)
+  }
+
+  private val fileForOpen = "verbs-top-50.dsv"
+
+  def main(args: Array[String]): Unit = {
+    val verbs = fetchVerbs(fileForOpen)
+
+    var countRightAnswer = 0
+    var countAllAnswers = 0
+
+    verbs.foreach(verb => {
+      countAllAnswers += 1
+
+      print(s"${verb.word} >> ")
+      val answer = readLine
+
+      val correctAnswer = s"${verb.v1} ${verb.v2} ${verb.v3}"
+      val isCorrect = answer == correctAnswer
+
+      if (isCorrect) {
+        countRightAnswer += 1
+        println(s"Yep, $countRightAnswer correct answers from $countAllAnswers")
+      } else println(s"Nope, correct answer is: $correctAnswer")
+    })
   }
 }

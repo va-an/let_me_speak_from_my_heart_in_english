@@ -1,11 +1,14 @@
 package io.vaan.letmespeak
 
 
+import scala.collection.mutable.ListBuffer
 import scala.io.Source
 import scala.io.StdIn.readLine
 import scala.util.{Failure, Random, Success, Try}
 
 object LetMeSpeak {
+  private val fileForOpen = "verbs-top-50.dsv"
+
   private case class Verb(
     word: String,
     v1: String,
@@ -31,10 +34,9 @@ object LetMeSpeak {
     Random.shuffle(verbs)
   }
 
-  private val fileForOpen = "verbs-top-50.dsv"
-
   def main(args: Array[String]): Unit = {
     val verbs = fetchVerbs(fileForOpen)
+    val needToLearn = new ListBuffer[Verb]()
 
     var countRightAnswer = 0
     var countAllAnswers = 0
@@ -60,9 +62,14 @@ object LetMeSpeak {
       if (isCorrect) {
         countRightAnswer += 1
         println(s"Yep, $countRightAnswer correct answers from $countAllAnswers")
-      } else println(s"Nope, correct answer is: ${verb.v1} ${verb.v2} ${verb.v3}")
+      } else {
+        println(s"Nope, correct answer is: ${verb.v1} ${verb.v2} ${verb.v3}")
+        needToLearn.addOne(verb)
+      }
     })
 
     println(s"$countRightAnswer right answers from $countAllAnswers.")
+    println("Need to learn this verbs:")
+    needToLearn.foreach(x => println(s"${x.word}\t${x.v1}\t${x.v2}\t${x.v3}"))
   }
 }

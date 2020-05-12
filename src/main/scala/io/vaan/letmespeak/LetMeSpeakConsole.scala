@@ -6,7 +6,7 @@ import scala.io.Source
 import scala.io.StdIn.readLine
 import scala.util.{Failure, Random, Success, Try}
 
-object LetMeSpeak {
+object LetMeSpeakConsole {
   private case class Verb(
     word: String,
     v1: String,
@@ -14,8 +14,33 @@ object LetMeSpeak {
     v3: String
   )
 
-  private def fetchVerbs(fileForOpen: String): Seq[Verb] = {
-    val verbs = Source
+  def main(args: Array[String]): Unit = {
+    val filename = args(0)
+    val allVerbs = fetchVerbs(filename)
+
+    val howToTrain = Try (args(1).toInt) match {
+      case Failure(_) => allVerbs.size
+      case Success(value) => value
+    }
+
+    val verbs = Random.shuffle(
+      allVerbs.slice(0, howToTrain)
+    )
+
+    println(s"Start training $howToTrain verbs from file $filename")
+
+    val (countRightAnswer, countAllAnswers, needToLearn) = mainCycle(verbs)
+
+    println(s"$countRightAnswer/$countAllAnswers")
+
+    if (needToLearn nonEmpty) {
+      println("Need to learn this verbs:")
+      needToLearn.foreach(x => println(s"${x.word}\t${x.v1}\t${x.v2}\t${x.v3}"))
+    }
+  }
+
+  private def fetchVerbs(fileForOpen: String): Seq[Verb] =
+    Source
       .fromResource(fileForOpen)
       .getLines
       .toSeq
@@ -29,15 +54,8 @@ object LetMeSpeak {
           v3 = split(2))
       }
 
-    Random.shuffle(verbs)
-  }
-
-  def main(args: Array[String]): Unit = {
-    val fileForOpen = args(0) + ".dsv"
-    val verbs = fetchVerbs(fileForOpen)
-
+  private def mainCycle(verbs: Seq[Verb]): (Int, Int, ListBuffer[Verb]) = {
     val needToLearn = new ListBuffer[Verb]()
-
     var countRightAnswer = 0
     var countAllAnswers = 0
 
@@ -68,8 +86,6 @@ object LetMeSpeak {
       }
     })
 
-    println(s"$countRightAnswer right answers from $countAllAnswers.")
-    println("Need to learn this verbs:")
-    needToLearn.foreach(x => println(s"${x.word}\t${x.v1}\t${x.v2}\t${x.v3}"))
+    (countRightAnswer, countAllAnswers, needToLearn)
   }
 }

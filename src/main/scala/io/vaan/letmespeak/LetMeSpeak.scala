@@ -7,8 +7,6 @@ import scala.io.StdIn.readLine
 import scala.util.{Failure, Random, Success, Try}
 
 object LetMeSpeak {
-  private val fileForOpen = "verbs-top-50.dsv"
-
   private case class Verb(
     word: String,
     v1: String,
@@ -35,7 +33,9 @@ object LetMeSpeak {
   }
 
   def main(args: Array[String]): Unit = {
+    val fileForOpen = args(0) + ".dsv"
     val verbs = fetchVerbs(fileForOpen)
+
     val needToLearn = new ListBuffer[Verb]()
 
     var countRightAnswer = 0

@@ -5,11 +5,17 @@ import io.vaan.letmespeak.dto.Verb
 import scala.io.Source
 
 object ResourceUtils {
-  def fetchVerbs(fileForOpen: String): Seq[Verb] =
+
+  /**
+   * Open file with verbs from resources
+   * @param fileForOpen - filename
+   * @return Seq[Verb]
+   */
+  def fetchVerbs(fileForOpen: String): List[Verb] =
     Source
       .fromResource(fileForOpen)
       .getLines
-      .toSeq
+      .toList
       .map { x =>
         val split = x.split("\\|")
 

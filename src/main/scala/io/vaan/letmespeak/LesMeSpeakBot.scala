@@ -6,10 +6,20 @@ import canoe.syntax._
 import cats.effect.{ExitCode, IO, IOApp}
 import cats.syntax.functor._
 import fs2.Stream
+import io.vaan.letmespeak.util.ResourceUtils.fetchVerbs
+
+import scala.util.{Failure, Success, Try}
 
 object LesMeSpeakBot extends IOApp {
   override def run(args: List[String]): IO[ExitCode] = {
     val token: String = args.head
+
+    val filename = Try(args(1)) match {
+      case Failure(_) => "256.dsv"
+      case Success(value) => value
+    }
+
+    val verbs = fetchVerbs(filename)
 
     Stream
       .resource(TelegramClient.global[IO](token))

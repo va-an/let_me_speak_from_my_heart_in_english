@@ -1,33 +1,28 @@
 package io.vaan.letmespeak
 
 
+import io.vaan.letmespeak.dto.Verb
+
 import scala.collection.mutable.ListBuffer
-import scala.io.Source
+import io.vaan.letmespeak.util.ResourceUtils.fetchVerbs
 import scala.io.StdIn.readLine
 import scala.util.{Failure, Random, Success, Try}
 
 object LetMeSpeakConsole {
-  private case class Verb(
-    word: String,
-    v1: String,
-    v2: String,
-    v3: String
-  )
-
   def main(args: Array[String]): Unit = {
     val filename = args(0)
     val allVerbs = fetchVerbs(filename)
 
-    val howToTrain = Try (args(1).toInt) match {
+    val howManyTrain = Try (args(1).toInt) match {
       case Failure(_) => allVerbs.size
       case Success(value) => value
     }
 
     val verbs = Random.shuffle(
-      allVerbs.slice(0, howToTrain)
+      allVerbs.slice(0, howManyTrain)
     )
 
-    println(s"Start training $howToTrain verbs from file $filename")
+    println(s"Start training $howManyTrain verbs from file $filename")
 
     val (countRightAnswer, countAllAnswers, needToLearn) = mainCycle(verbs)
 
@@ -39,21 +34,6 @@ object LetMeSpeakConsole {
       needToLearn.foreach(x => println(s"${x.word}\t${x.v1}\t${x.v2}\t${x.v3}"))
     }
   }
-
-  private def fetchVerbs(fileForOpen: String): Seq[Verb] =
-    Source
-      .fromResource(fileForOpen)
-      .getLines
-      .toSeq
-      .map { x =>
-        val split = x.split("\\|")
-
-        Verb(
-          word = split(3),
-          v1 = split(0),
-          v2 = split(1),
-          v3 = split(2))
-      }
 
   private def mainCycle(verbs: Seq[Verb]): (Int, Int, ListBuffer[Verb]) = {
     val needToLearn = new ListBuffer[Verb]()

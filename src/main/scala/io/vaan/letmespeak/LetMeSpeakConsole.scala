@@ -31,6 +31,7 @@ object LetMeSpeakConsole {
 
     val (countRightAnswer, countAllAnswers, needToLearn) = mainCycle(verbs)
 
+    println
     println(s"$countRightAnswer/$countAllAnswers")
 
     if (needToLearn nonEmpty) {

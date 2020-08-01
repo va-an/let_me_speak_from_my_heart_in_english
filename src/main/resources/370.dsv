@@ -195,13 +195,13 @@ quit|quit/quitted|quit/quitted|оставлять, покидать
 read|read|read|читать
 reawake|reawoke|reawaken|проснуться снова
 rebid|rebid|rebid|снова сделать ставку
-rebind|rebound|rebound
-rebroadcast|rebroadcast/rebroadcasted|rebroadcast/rebroadcasted
-rebuild|rebuilt|rebuilt
-recast|recast|recast
-recut|recut|recut
-redeal|redealt|redealt
-redo|redid|redone
+rebind|rebound|rebound|заново связать
+rebroadcast|rebroadcast/rebroadcasted|rebroadcast/rebroadcasted|перетранслировать
+rebuild|rebuilt|rebuilt|пересобрать
+recast|recast|recast|to cast again
+recut|recut|recut|to cut again
+redeal|redealt|redealt|пересдавать (карты)
+redo|redid|redone|to do over or again
 redraw|redrew|redrawn
 refit|refit/refitted|refit/refitted
 regrind|reground|reground
